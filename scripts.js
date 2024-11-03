@@ -1,5 +1,5 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
-import { createBookElement, changeTheme, showMoreButtonUpdate, createDropdownOptions, createBookList } from './helpers.js';
+import { changeTheme, showMoreButtonUpdate, createDropdownOptions, createBookList, filterBooks } from './helpers.js';
 
 let page = 1;
 let matches = books
@@ -56,24 +56,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     event.preventDefault()
     const formData = new FormData(event.target)
     const filters = Object.fromEntries(formData)
-    const result = []
-
-    for (const book of books) {
-        let genreMatch = filters.genre === 'any'
-
-        for (const singleGenre of book.genres) {
-            if (genreMatch) break;
-            if (singleGenre === filters.genre) { genreMatch = true }
-        }
-
-        if (
-            (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
-            (filters.author === 'any' || book.author === filters.author) && 
-            genreMatch
-        ) {
-            result.push(book)
-        }
-    }
+    const result = filterBooks(filters)
 
     page = 1;
     matches = result
@@ -85,13 +68,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     }
 
     document.querySelector('[data-list-items]').innerHTML = ''
-    const newItems = document.createDocumentFragment()
-
-    for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-        const bookElement = createBookElement(id, image, title, author)
-
-        newItems.appendChild(bookElement)
-    }
+    const newItems = createBookList(result.slice(0, BOOKS_PER_PAGE))
 
     document.querySelector('[data-list-items]').appendChild(newItems)
     
@@ -102,13 +79,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
 })
 
 document.querySelector('[data-list-button]').addEventListener('click', () => {
-    const fragment = document.createDocumentFragment()
-
-    for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
-        const bookElement = createBookElement(id, image, title, author)
-
-        fragment.appendChild(bookElement)
-    }
+    const fragment = createBookList(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE))
 
     document.querySelector('[data-list-items]').appendChild(fragment)
     page += 1

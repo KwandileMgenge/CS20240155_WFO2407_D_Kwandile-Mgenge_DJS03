@@ -27,7 +27,7 @@ export function createBookList(bookArray) {
         const bookElement = createBookElement(id, image, title, author);
         fragment.appendChild(bookElement);
     });
-    
+
     return fragment;
 };
 
@@ -69,4 +69,14 @@ export function createDropdownOptions(data, defaultValue, defaultText) {
         fragment.appendChild(element);
     }
     return fragment;
+};
+
+export function filterBooks (filters) {
+    return books.filter(book => {
+        const titleMatch = filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase());
+        const genreMatch = filters.genre === 'any' || book.genres.includes(filters.genre);
+        const authorMatch = filters.author === 'any' || book.author === filters.author;
+
+        return genreMatch && titleMatch && authorMatch;
+    });
 };
