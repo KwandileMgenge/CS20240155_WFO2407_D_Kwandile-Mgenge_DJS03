@@ -1,4 +1,5 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
+import { createBookElement } from './helpers.js';
 
 let page = 1;
 let matches = books
@@ -6,23 +7,9 @@ let matches = books
 const starting = document.createDocumentFragment()
 
 for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
-    const element = document.createElement('button')
-    element.classList = 'preview'
-    element.setAttribute('data-preview', id)
+    const bookElement = createBookElement(id, image, title, author)
 
-    element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `
-
-    starting.appendChild(element)
+    starting.appendChild(bookElement)
 }
 
 document.querySelector('[data-list-items]').appendChild(starting)
@@ -148,23 +135,9 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     const newItems = document.createDocumentFragment()
 
     for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
-    
-        element.innerHTML = `
-            <img
-                class="preview__image"
-                src="${image}"
-            />
-            
-            <div class="preview__info">
-                <h3 class="preview__title">${title}</h3>
-                <div class="preview__author">${authors[author]}</div>
-            </div>
-        `
+        const bookElement = createBookElement(id, image, title, author)
 
-        newItems.appendChild(element)
+        newItems.appendChild(bookElement)
     }
 
     document.querySelector('[data-list-items]').appendChild(newItems)
@@ -183,23 +156,9 @@ document.querySelector('[data-list-button]').addEventListener('click', () => {
     const fragment = document.createDocumentFragment()
 
     for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
-    
-        element.innerHTML = `
-            <img
-                class="preview__image"
-                src="${image}"
-            />
-            
-            <div class="preview__info">
-                <h3 class="preview__title">${title}</h3>
-                <div class="preview__author">${authors[author]}</div>
-            </div>
-        `
+        const bookElement = createBookElement(id, image, title, author)
 
-        fragment.appendChild(element)
+        fragment.appendChild(bookElement)
     }
 
     document.querySelector('[data-list-items]').appendChild(fragment)
