@@ -1,8 +1,10 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
-import { createBookElement, changeTheme } from './helpers.js';
+import { createBookElement, changeTheme, showMoreButtonUpdate } from './helpers.js';
 
 let page = 1;
 let matches = books
+
+showMoreButtonUpdate(matches, page)
 
 const starting = document.createDocumentFragment()
 
@@ -43,14 +45,6 @@ for (const [id, name] of Object.entries(authors)) {
 }
 
 document.querySelector('[data-search-authors]').appendChild(authorsHtml)
-
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
-
-document.querySelector('[data-list-button]').innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
 
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
@@ -147,6 +141,7 @@ document.querySelector('[data-list-button]').addEventListener('click', () => {
 
     document.querySelector('[data-list-items]').appendChild(fragment)
     page += 1
+    showMoreButtonUpdate(matches, page)
 })
 
 document.querySelector('[data-list-items]').addEventListener('click', (event) => {

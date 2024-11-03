@@ -29,3 +29,15 @@ export function changeTheme(theme) {
         document.documentElement.style.setProperty('--color-light', '255, 255, 255');
     }
 }
+
+export function showMoreButtonUpdate(matches, page) {
+    const button = document.querySelector('[data-list-button]')
+    const remainingBooks = matches.length - (page * BOOKS_PER_PAGE)
+
+    button.disabled = remainingBooks < 1
+
+    document.querySelector('[data-list-button]').innerHTML = `
+        <span>Show more</span>
+        <span class="list__remaining"> (${remainingBooks > 0 ? remainingBooks : 0})</span>
+    `
+}
