@@ -1,5 +1,5 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
-import { createBookElement, changeTheme, showMoreButtonUpdate } from './helpers.js';
+import { createBookElement, changeTheme, showMoreButtonUpdate, createDropdownOptions } from './helpers.js';
 
 let page = 1;
 let matches = books
@@ -16,35 +16,15 @@ for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
 
 document.querySelector('[data-list-items]').appendChild(starting)
 
-const genreHtml = document.createDocumentFragment()
-const firstGenreElement = document.createElement('option')
-firstGenreElement.value = 'any'
-firstGenreElement.innerText = 'All Genres'
-genreHtml.appendChild(firstGenreElement)
+const generateGenreDropdown = () => 
+    document.querySelector('[data-search-genres]').appendChild(createDropdownOptions(genres, 'any', 'All Genres'))
 
-for (const [id, name] of Object.entries(genres)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    genreHtml.appendChild(element)
-}
+generateGenreDropdown()
 
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
+const generateAuthorsDropdown = () => 
+    document.querySelector('[data-search-authors]').appendChild(createDropdownOptions(authors, 'any', 'All Authors'))
 
-const authorsHtml = document.createDocumentFragment()
-const firstAuthorElement = document.createElement('option')
-firstAuthorElement.value = 'any'
-firstAuthorElement.innerText = 'All Authors'
-authorsHtml.appendChild(firstAuthorElement)
-
-for (const [id, name] of Object.entries(authors)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    authorsHtml.appendChild(element)
-}
-
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
+generateAuthorsDropdown()
 
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false

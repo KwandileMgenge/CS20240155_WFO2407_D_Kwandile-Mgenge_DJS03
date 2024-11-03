@@ -41,3 +41,21 @@ export function showMoreButtonUpdate(matches, page) {
         <span class="list__remaining"> (${remainingBooks > 0 ? remainingBooks : 0})</span>
     `
 }
+
+export function createDropdownOptions(data, defaultValue, defaultText) {
+    const fragment = document.createDocumentFragment();
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = defaultValue;
+    defaultOption.innerText = defaultText;
+
+    fragment.appendChild(defaultOption);
+
+    for (const [id, name] of Object.entries(data)) {
+        const element = document.createElement('option');
+        element.value = id;
+        element.innerText = name;
+        fragment.appendChild(element);
+    }
+    return fragment;
+};
