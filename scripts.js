@@ -1,20 +1,15 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
-import { createBookElement, changeTheme, showMoreButtonUpdate, createDropdownOptions } from './helpers.js';
+import { createBookElement, changeTheme, showMoreButtonUpdate, createDropdownOptions, createBookList } from './helpers.js';
 
 let page = 1;
 let matches = books
 
 showMoreButtonUpdate(matches, page)
 
-const starting = document.createDocumentFragment()
+const renderBooks = () => 
+    document.querySelector('[data-list-items]').appendChild(createBookList(matches.slice(0, BOOKS_PER_PAGE)))
 
-for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
-    const bookElement = createBookElement(id, image, title, author)
-
-    starting.appendChild(bookElement)
-}
-
-document.querySelector('[data-list-items]').appendChild(starting)
+renderBooks()
 
 const generateGenreDropdown = () => 
     document.querySelector('[data-search-genres]').appendChild(createDropdownOptions(genres, 'any', 'All Genres'))
@@ -99,12 +94,8 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     }
 
     document.querySelector('[data-list-items]').appendChild(newItems)
-    document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
-
-    document.querySelector('[data-list-button]').innerHTML = `
-        <span>Show more</span>
-        <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-    `
+    
+    showMoreButtonUpdate(matches, page)
 
     window.scrollTo({top: 0, behavior: 'smooth'});
     document.querySelector('[data-search-overlay]').open = false

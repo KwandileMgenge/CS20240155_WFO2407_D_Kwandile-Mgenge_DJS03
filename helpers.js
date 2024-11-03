@@ -20,6 +20,17 @@ export function createBookElement(id, image, title, author) {
     return element
 }
 
+export function createBookList(bookArray) {
+    const fragment = document.createDocumentFragment();
+
+    bookArray.forEach(({ author, id, image, title }) => {
+        const bookElement = createBookElement(id, image, title, author);
+        fragment.appendChild(bookElement);
+    });
+    
+    return fragment;
+};
+
 export function changeTheme(theme) {
     if (theme === 'night') {
         document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
